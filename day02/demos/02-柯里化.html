@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    let tags = 'div,p,a,img,ul,li'.split(',');
+    function makeMap(keys){
+        let set = {}; //集合，键值对
+        keys.forEach(key=>set[key] = true);
+
+        return function(tagName){
+            //!!双感叹号相当于把一个数据转为布尔值
+            return !! set[tagName.toLowerCase()];
+        }
+    }
+    let isHTMLTag = makeMap(tags); //返回里面的函数
+    console.log(isHTMLTag('ul'));
+</script>
+</html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="root">
+        <div>
+            <div>hello-1</div>
+            <div>hello-2</div>
+            <div>hello-3</div>
+            <ul>
+                <li>1</li>
+                <li>2</li>
+                <li>3</li>
+            </ul>
+        </div>
+    </div>
+</body>
+<script>
+    //为什么要使用虚拟DOM？性能
+    //直接在页面操作DOM，页面要不断的更新，会非常消耗性能
+    //使用虚拟DOM，所有的操作都在内存中进行，完成后只需要更新一次到页面（虚拟DOM是缓存起来的）
+    
+    //<div /> => { tag:'div' }
+    //文本节点 => { tag:undefined, value:'文本节点' }
+    //<div title="1" class="c" /> => { tag:'div', data:{ title:'1', class:'c' } }
+    //<div><div /></div> => { tag:'div',children:[ { tag:'div' } ] }
+
+    class VNode{
+        constructor(tag,data,value,type){
+            this.tag = tag && tag.toLowerCase();
+            this.data = data;
+            this.value = value;
+            this.type = type;
+            this.children = [];
+
+        }
+
+        appendChild(vnode){
+            this.children.push(vnode);
+
+        }
+    }
+
+    //使用递归来遍历DOM元素，生成虚拟DOM
+    //Vue中的源码使用的栈结构，使用栈存储 父元素来实现递归生成
+    function getVNode(node){
+        let nodeType = node.nodeType;
+        let _vnode = null;
+        if(nodeType===1){
+          //元素
+          let nodeName = node.nodeName;
+          let attrs = node.attributes; //伪数组
+          let _attrObj = {};
+          for(let i=0;i<attrs.length;i++){ //attrs[i]属性节点(nodeType==2)
+            _attrObj[attrs[i].nodeName] = attrs[i].nodeValue;
+          }
+          _vnode = new VNode(nodeName,_attrObj,undefined,nodeType);
+          
+          //考虑node子元素
+          let childNodes = node.childNodes;
+          for(let i=0;i<childNodes.length;i++){
+            _vnode.appendChild(getVNode(childNodes[i])); //递归
+          }
+        }else if(nodeType===3){
+            _vnode = new VNode(undefined,undefined,node.nodeValue,nodeType);
+        }
+        return _vnode;
+    }
+
+     let root = document.querySelector('#root');
+     let vroot = getVNode(root);
+     console.log('vroot:',vroot);
+
+    //将vNode转换为真正的DOM
+    function parseVNode(vnode){
+
+    }
+</script>
+
+</html>
