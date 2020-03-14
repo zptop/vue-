@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    var o = {};
+    o.name = '张三';
+
+    //待价于
+    Object.defineProperty(o,'age',{
+        configurable:true,
+        writable:true,
+        enumerable:!true, //可枚举
+        value:19
+    });
+
+    //get和set
+    //要响应式就表示在赋值和读取的时候，附带要做一些事情
+    //writable和（get,set）不能共存
+    let _genter;
+    Object.defineProperty(o,'gender',{
+        configurable:true,
+        // writable:true,
+        enumerable:true,
+        get(){   //如果使用o.gender来访问数据，就会调用get方法(getter，读取器)
+            return _genter;
+        },
+        set(newVal){   //如果o.gender = 'xxx',那么就会调用这个set方法，并且设置的值会作为参数传入set
+            _genter = newVal;
+        }
+    });
+    //如果同时使用get和set需要一个中间变量存储真正的数据
+    //问题：这个_gender被暴露在全局作用域？怎么办？
+    //在vue使用defineRective(target,key,value,enumerable)
+
+</script>
+</html>

@@ -138,3 +138,18 @@ set['navigtor'] //!!undefined -> false
 ---
 
 但是如果是使用的函数，每次都需要循环遍历判断是不是数组中的
+
+# 响应式原理
+- 我们在使用Vue的时候，赋值属性，获得属性都是直接使用的Vue实例
+- 我们在设置属性值的时候，页面的数据更新
+
+---js
+Object.defineProperty(对象，'属性名',{
+  writeable:
+  configable:
+  enumerable: 控制属性是否可枚举 for...in循环
+  set(){}  赋值触发
+  get(){}  取值触发
+  value  用到get和set后，value就不用考虑了
+})
+---
