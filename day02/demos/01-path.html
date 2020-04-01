@@ -38,7 +38,6 @@
             this.value = value;
             this.type = type;
             this.children = [];
-
         }
 
         appendChild(vnode) {
@@ -105,7 +104,7 @@
             });
 
             //子元素
-            //children  只会查找元素节点
+            //children   只会查找元素节点
             //childNodes 会查找元素节点和文本节点
             let children = vnode.children;
             children.forEach(subvnode => {

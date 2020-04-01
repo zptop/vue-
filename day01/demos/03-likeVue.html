@@ -65,9 +65,9 @@
         //利用 模板生成一个 需要被渲染的html标签（准 真正在页面中显示的标签），在内存中
         let generateNode = tmpNode.cloneNode(true); //DOM元素可以这么用
 
-        console.log(tmpNode);
+        console.log('tmpNode:',tmpNode);
         compiler(generateNode,data);  //将generateNode中的坑替换掉
-        console.log(generateNode);
+        console.log('generateNode:',generateNode);
         //我们此时是没有生成新的template，所以这里看到的 是直接在页面中就更新的数据 因为DOM是引用类型
         //这样做模板就没有了
 

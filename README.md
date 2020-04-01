@@ -199,5 +199,30 @@ let o = {
 已经将对象改成响应式的了，如果直接给对象赋值另一个对象，那么就不是响应式的了，怎么办？
 
 
+# 发布订阅模式
+任务：
+- 作业
+- 代理方法(app.name,app._data.name)
+- 事件模型(node:event模块)
+-vue中observer与watcher和Dep
 
 
+# 代理方法
+就是要将app._data中的成员给映射到app上
+
+由于需要在更新数据的时候，更新页面的内容
+所以app._data访问的成员与app访问的成员应该是同一个成员
+
+由于app._data已经是响应式的对象了，所以只需要让app访问的成员去访问app._data的对应成员就可以了。
+
+例如：
+```js
+app.name 转换为 app._data.name
+app.xxx 转换为 app._data.xxx
+```
+
+target相当于app
+src相当于app._data
+prop相当于name
+引入了一个函数proxy( target, src , prop )，将target的操作给映射到src.prop上
+这里是因为当时没有`proxy`语法(es6)

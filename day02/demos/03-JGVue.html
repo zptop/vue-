@@ -30,7 +30,6 @@
             this.value = value;
             this.type = type;
             this.children = [];
-
         }
 
         appendChild(vnode) {
@@ -101,16 +100,12 @@
     function JGVue(options) {
         this._data = options.data;
         this._template = document.querySelector(options.el);
-
-
         this.mount();//挂载
     }
 
     JGVue.prototype.mount = function () {
         //需要提供一个render方法：生成虚拟DOM 缓存
         this.render = this.createRenderFn(); //带有缓存的函数
-
-
         this.mountComponent();
     }
 
@@ -139,7 +134,7 @@
         //Vue:将AST+data =>VNode
         //我们：带坑的VNode+data=>含有数据的VNode
         return function render() {
-            //将带坑的VNode转换为待数据的VNode
+            //将带坑的VNode转换为带数据的VNode
             let _tmp =  combine(ast,this._data);
             console.log('_tmp:',_tmp);
             return _tmp;
