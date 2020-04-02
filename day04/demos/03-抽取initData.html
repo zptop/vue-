@@ -252,8 +252,14 @@
 
                 //调用vue的实例方法mountComponent， 模板刷新（注意：现在是假的，只是演示）
                 //vue实例？watcher就不会有这个问题
-            
-                value = reactify(newVal);
+               
+                //临时的处理办法
+                if(typeof newVal ==="object" ){
+                    value = reactify(newVal);  //由于这个方法暂时只是过渡，不安全
+                }else{
+                    value = newVal;
+                }
+               
                 that.mountComponent();
             }
         })
@@ -294,15 +300,10 @@
 
     //取代原来reactify
     JGVue.prototype.initData = function(){
-        //遍历this._data的成员，将属性转换为响应式，
-        //将直接属性代理到实例上
         let keys = Object.keys(this._data);
 
         //响应式化
-        for(let i=0;i<keys.length;i++){
-            //这里将对象this._data[keys[i]]变成响应式的
-            reactify(keys[i],this);
-        }
+        reactify(this._data,this);
         
         //代理 
         for(let i=0;i<keys.length;i++){
