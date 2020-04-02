@@ -221,8 +221,12 @@ app.name 转换为 app._data.name
 app.xxx 转换为 app._data.xxx
 ```
 
-target相当于app
-src相当于app._data
-prop相当于name
+target相当于app,
+src相当于app._data,
+prop相当于name,
 引入了一个函数proxy( target, src , prop )，将target的操作给映射到src.prop上
 这里是因为当时没有`proxy`语法(es6)
+
+我们之前处理的rectify方法已经不行了，我们需要一个新的方法来处理。
+提供一个Observer的方法，在方法中对属性进行处理
+可以将这个方法封装到initData方法中
