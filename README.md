@@ -371,3 +371,41 @@ proxy(实例,'properties',属性名);
   - 我们实现的reactify,需要和实例紧紧的绑定在一起，分离(解耦)
 
   # 引入watcher
+  我们的watcher实例有一个属性vm,表示的就是当前的vue实例
+
+  #　引入Dep对象
+  该对象提供依赖收集(depend)的功能，和派发更新(notify)，的功能
+  在notify中去调用watcher的update方法
+
+  # Watcher与Dep
+  之前将渲染Watcher放在全局作用域上，这样处理是有问题的
+  - vue项目中包含很多的组件，各个组件是**自治**
+  　- 那么watcher就可能会有多个
+  　- 每一个watcher用于描述一个渲染的行为或计算行为
+  　- 子组件发生数据的更新，页面需要重新渲染（更正的vue中是局部渲染）
+  　- 例如vue中推荐是使用计算属性代替复杂的插值表达式
+  　　- 计算属性是会伴随其使用的属性的变化而变化的
+        - `name:()=>this.firstName + this.lastName`(name会被缓存起来，只有当firstName或lastName改变后，才会重新计算)
+          - 计算属性依赖于　属性firstName和属性lastName
+          - 只要被依赖的属性发生变化，那么就会促使计算属性**重新计算**（watcher）
+　 - 依赖收集与派发更新是怎么运行起来的
+　　我们在访问的时候就会进行收集，在修改的时候就会更新，收集到什么就更新什么
+
+所谓的依赖收集**实际上就是告诉当前的watcher，什么属性被访问了**
+那么在这个watcher计算的时候或渲染页面的时候，就会将这些收集到的属性进行更新
+
+如何将属性与当前watcher关联起来？
+- 在全局准备一个targetStack（watcher栈，简单的理解为watcher"数组"，把一个操作中需要使用的watcher都存起来）
+- 在watcher调用 get 方法的时候，将当前 watcher 放到全局，在get结束的时候（之后），将这个全局的watcher移除：提供pushTarget,popTarget
+- 在每一个属性中都有一个Dep对象
+
+- 我们在访问对象属性的时候（get）,我们的渲染 watcher 就在全局中。
+- 将属性与 watcher 关联，其实就是将当前渲染的 watcher 存储到属性相关的Dep。
+- 同时，将Dep也存储到当前全局的 watcher 中（互相引用的关系）。
+
+- 属性引用了当前渲染 watcher,**属性知道谁渲染它**
+- 当前渲染 watcher 引用了访问的属性（Dep），**当前的watcher知道渲染了什么属性**
+
+我们的Dep有一个方法，叫notity()。
+内部就是将Dep中的sub取出来，依次调用其update方法。
+subs中存储的是**知道要渲染什么属性的watcher**

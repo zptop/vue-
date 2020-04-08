@@ -34,6 +34,8 @@ if(typeof value==='object' && value !== null){
 //是非数组的引用类型
   observe(value); //递归
 }
+
+let dep = new Dep();
 Object.defineProperty(target,key,{
     configurable:true,
     enumerable:!!enumerable,
@@ -42,10 +44,9 @@ Object.defineProperty(target,key,{
         return value;
     },
     set(newVal){
-        console.log(`设置o的${key}属性为:${newVal}`);//额外操作
+        // console.log(`设置o的${key}属性为:${newVal}`);//额外操作
 
-        //调用vue的实例方法mountComponent， 模板刷新（注意：现在是假的，只是演示）
-        //vue实例？watcher就不会有这个问题
+       if(value===newVal) return;
        
         //目的
         //将重新赋值的数据变成响应式的，因此如果传入的是对象类型，那么就需要使用observe将其转换为响应式
@@ -57,7 +58,10 @@ Object.defineProperty(target,key,{
         //临时：数组现在没有参与页面的渲染
         //所以在数组上进行响应式的处理，不需要页面的刷新
         //那么即使这里无法调用也没有关系
-        typeof that.mountComponent === 'function' && that.mountComponent();
+        // typeof that.mountComponent === 'function' && that.mountComponent();
+
+        //派发更新，找到全局的watcher,调用update
+        dep.notify();
     }
 });
 }
