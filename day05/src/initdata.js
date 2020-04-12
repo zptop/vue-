@@ -41,6 +41,11 @@ Object.defineProperty(target,key,{
     enumerable:!!enumerable,
     get(){
         console.log(`读取o的${key}属性`);           //额外操作
+
+        //依赖收集(暂时略)
+  
+      dep.depend();
+    
         return value;
     },
     set(newVal){

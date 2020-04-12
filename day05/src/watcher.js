@@ -11,12 +11,14 @@ class Watcher{
         this.depIds = {}; //是一个Set类型，用于保证依赖项的唯一性(简化的代码暂时不实现这一块)
 
         //一开始需要渲染：真实vue中：this.lazy?undefined:this.get()
-        this.getter();
+        this.get();
     }
 
     //计算，触发getter
     get(){
+        pushTarget(this);
         this.getter.call(this.vm,this.vm); //上下文的问题就解决了
+        popTarget();
     }
 
     /**
@@ -40,5 +42,13 @@ class Watcher{
      */
     cleanupDep(){
         
+    }
+
+
+   /**
+    * 将当前的Dep与当前的watcher关联
+    */
+    addDep(dep){
+        this.deps.push(dep);
     }
 }

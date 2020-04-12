@@ -21,7 +21,7 @@
         // this.update(this.render()); //使用发布订阅模式，渲染和计算的行为应该交给watcher来未完成
 
         //这个watcher就是全局的Watcher,在任何一个位置都可以访问他了(简化的写法)
-        Dep.target = new Watcher(this,mount); //相当于这里调用了mount
+        new Watcher(this,mount); //相当于这里调用了mount
     }
 
     /**
